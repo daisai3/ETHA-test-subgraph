@@ -1,0 +1,26 @@
+enum TransactionType {
+  Transferred
+  Received
+}
+
+type Transaction @entity {
+  id: ID!
+  account: Account!
+  transactionType: TransactionType!
+  from: Bytes!
+  to: Bytes!
+  value: BigInt!
+}
+
+type Account @entity {
+  id: ID!
+  address: Bytes!
+  balance: BigInt!
+  history: [Transaction]! @derivedFrom(field: "account")
+}
+
+type Token @entity {
+  id: ID!
+  address: Bytes!
+  totalSupply: BigInt!
+}

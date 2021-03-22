@@ -1,0 +1,29 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  # This approach uses a particular event emitted once very early to trigger token registry
+  # initialization. It is not so important what the event is but rather that it was emitted before
+  # any other event of an ERC20 token. We even don't know what contract it is. Besides that, the ABI
+  # file for that contract was inferred since no contract information or source code is available
+  # out there.
+  - name: ETHAToken
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      abi: ETHAToken
+      address: "0x59e9261255644c411afdd00bd89162d09d862e38"
+      startBlock: 11374863
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/token.ts
+      entities:
+        - Token
+      abis:
+        - name: ETHAToken
+          file: ./abis/ETHAToken.json
+      eventHandlers:
+        - event: "Transfer(indexed address,indexed address,uint256)"
+          handler: handleTransfer
